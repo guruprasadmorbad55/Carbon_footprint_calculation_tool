@@ -37,3 +37,36 @@ def get_inputs():
     except ValueError:
         print("Invalid input! Please enter numerical values.")
         return None
+    
+# Calculations
+def calculate_emissions(data):
+    emissions = {}
+
+    # Energy
+    emissions['Energy Usage'] = ((data['electricity_cost'] * 12 * ELECTRICITY_FACTOR) +
+                                 (data['natural_gas_cost'] * 12 * NATURAL_GAS_FACTOR) +
+                                 (data['fuel_cost'] * 12 * FUEL_FACTOR))
+
+    # Waste
+    emissions['Waste'] = data['waste_generated'] * 12 * (WASTE_FACTOR - data['recycling_percentage'] / 100)
+
+    # Business Travel
+    emissions['Business Travel'] = (data['kilometers_traveled'] * (1 / data['fuel_efficiency']) * BUSINESS_TRAVEL_FACTOR)
+
+    return emissions
+
+# Recommendations
+def generate_recommendations(emissions):
+    recommendations = []
+    
+    if emissions['Energy Usage'] > 1000:
+        recommendations.append("Try to use renewable energy sources and use machines and electronics which are efficient and consume less energy.")
+    if emissions['Waste'] > 500:
+        recommendations.append("Classify the waste and try to implement modern and efficient waste management system.")
+    if emissions['Business Travel'] > 1000:
+        recommendations.append("Make a campain to use public transport and go for online meetings instead of offline where ever it is possible.")
+
+    if not recommendations:
+        recommendations.append("Your carbon footprint is within acceptable limits. Keep up the good work!")
+    
+    return recommendations
