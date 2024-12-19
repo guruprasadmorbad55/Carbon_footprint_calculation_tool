@@ -88,7 +88,7 @@ def create_visualization(emissions):
 
     return chart_path
 
-# Function to generate a PDF report
+# Generation of PDF report
 def generate_pdf(emissions, recommendations, chart_path):
     pdf = FPDF()
     pdf.add_page()
@@ -118,3 +118,26 @@ def generate_pdf(emissions, recommendations, chart_path):
     pdf_path = "carbon_footprint_report.pdf"
     pdf.output(pdf_path)
     print(f"PDF report saved as {pdf_path}")
+
+    
+def main():
+    print("Welcome to the Carbon Footprint Monitoring Tool\n")
+    inputs = get_inputs()
+    if inputs:
+        emissions = calculate_emissions(inputs)
+        print("\nCalculated Carbon Emissions (kg CO2):")
+        for category, value in emissions.items():
+            print(f"{category}: {value:.2f}")
+        
+        recommendations = generate_recommendations(emissions)
+        print("\nRecommendations:")
+        for rec in recommendations:
+            print(f"- {rec}")
+
+        chart_path = create_visualization(emissions)
+        generate_pdf(emissions, recommendations, chart_path)
+    else:
+        print("No valid inputs provided. Exiting.")
+
+if __name__ == "__main__":
+    main()
