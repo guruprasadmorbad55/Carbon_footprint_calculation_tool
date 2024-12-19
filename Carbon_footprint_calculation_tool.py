@@ -67,6 +67,54 @@ def generate_recommendations(emissions):
         recommendations.append("Make a campain to use public transport and go for online meetings instead of offline where ever it is possible.")
 
     if not recommendations:
-        recommendations.append("Your carbon footprint is within acceptable limits. Keep up the good work!")
+        recommendations.append("Your carbon footprint is within acceptable limits.")
     
     return recommendations
+
+# Visualization
+def create_visualization(emissions):
+    categories = list(emissions.keys())
+    values = list(emissions.values())
+
+    plt.figure(figsize=(8, 6))
+    plt.bar(categories, values, color=['green', 'blue', 'orange'])
+    plt.title('Carbon Footprint by Category')
+    plt.ylabel('Emissions (kg CO2)')
+    plt.tight_layout()
+    chart_path = "carbon_footprint_chart.png"
+    plt.savefig(chart_path)
+    print(f"Visualization saved as {chart_path}")
+    plt.show()
+
+    return chart_path
+
+# Function to generate a PDF report
+def generate_pdf(emissions, recommendations, chart_path):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Title
+    pdf.cell(200, 10, txt="Carbon Footprint Report", ln=True, align='C')
+    pdf.ln(10)
+
+    # Emissions Summary
+    pdf.cell(200, 10, txt="Emissions Summary:", ln=True)
+    for category, value in emissions.items():
+        pdf.cell(0, 10, txt=f"{category}: {value:.2f} kg CO2", ln=True)
+    pdf.ln(10)
+
+    # Recommendations
+    pdf.cell(200, 10, txt="Recommendations:", ln=True)
+    for rec in recommendations:
+        pdf.multi_cell(0, 10, txt=f"- {rec}")
+    pdf.ln(10)
+
+    # Add Visualization
+    pdf.cell(200, 10, txt="See the chart below for visual representation.", ln=True)
+    pdf.image(chart_path, x=10, y=None, w=190)
+
+    # Save PDF
+    pdf_path = "carbon_footprint_report.pdf"
+    pdf.output(pdf_path)
+    print(f"PDF report saved as {pdf_path}")
